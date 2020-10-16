@@ -1,0 +1,23 @@
+<apex:page controller="AccountDetailsViewController">
+   <apex:form >
+        <apex:pageBlock >
+            
+            <apex:actionFunction action="{!getContacts}" name="selectContacts"
+                                reRender="ContactTableSection" />
+            
+            Account: 
+            <apex:selectList size="1" value="{!accountId}" onchange="selectContacts()">
+                <apex:selectOptions value="{!accountSelectOptionList}"/>
+            </apex:selectList>
+            
+            <apex:pageBlockSection title="Contact Table" columns="1" id="ContactTableSection">
+                <apex:pageBlockTable value="{!contactList}" var="item">
+                    <apex:column value="{!item.Id}" />
+                    <apex:column value="{!item.Name}" />
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+            
+        </apex:pageBlock>
+    </apex:form> 
+    
+</apex:page>
