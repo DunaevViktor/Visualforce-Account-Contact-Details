@@ -1,23 +1,39 @@
-<apex:page controller="AccountDetailsViewController">
+<apex:page showHeader="false" sidebar="false" controller="AccountDetailsViewController">
    <apex:form >
         <apex:pageBlock >
             
-            <apex:actionFunction action="{!getContacts}" name="selectContacts"
-                                reRender="ContactTableSection" />
-            
-            Account: 
-            <apex:selectList size="1" value="{!accountId}" onchange="selectContacts()">
+            <apex:actionFunction action="{!getAllDetails}" name="selectAccount"
+                                reRender="AccountInfoSection"/>
+
+            Select Account: 
+
+            <apex:selectList size="1" value="{!accountId}" onchange="selectAccount()">
                 <apex:selectOptions value="{!accountSelectOptionList}"/>
             </apex:selectList>
             
-            <apex:pageBlockSection title="Contact Table" columns="1" id="ContactTableSection">
-                <apex:pageBlockTable value="{!contactList}" var="item">
-                    <apex:column value="{!item.Id}" />
-                    <apex:column value="{!item.Name}" />
-                </apex:pageBlockTable>
-            </apex:pageBlockSection>
+            <apex:pageBlockSection title="Account" id="AccountInfoSection">
+
+                <apex:outputField value="{!accountWithAllDetails.Name }"/>
+                <apex:outputField value="{!accountWithAllDetails.AccountNumber }"/>
+                <apex:outputField value="{!accountWithAllDetails.Type }"/>
+                <apex:outputField value="{!accountWithAllDetails.AnnualRevenue }"/>
+                <apex:outputField value="{!accountWithAllDetails.SLAExpirationDate__c }"/>
+                <apex:outputField value="{!accountWithAllDetails.Industry }"/>
+                <apex:outputField value="{!accountWithAllDetails.Rating }"/>
+                <apex:outputField value="{!accountWithAllDetails.NumberOfEmployees }"/>
+                <apex:outputField value="{!accountWithAllDetails.Phone }"/>
+                <apex:outputField value="{!accountWithAllDetails.Fax }"/>
+
+                <apex:pageBlockSection columns="1" title="Related contacts">
+                    <apex:pageBlockTable value="{!accountWithAllDetails.contacts}" var="contact">
+                        <apex:column value="{!contact.Name}"/>
+                        <apex:column value="{!contact.Title}"/>
+                        <apex:column value="{!contact.Phone}"/>
+                    </apex:pageBlockTable>
+                </apex:pageBlockSection>
+
+            </apex:pageBlockSection> 
             
         </apex:pageBlock>
     </apex:form> 
-    
 </apex:page>

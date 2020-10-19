@@ -2,8 +2,8 @@ public with sharing class AccountDetailsViewController {
 
     public List<Account> accountList {get;set;}
     public List<SelectOption> accountSelectOptionList {get;set;}
-    public List<Contact> contactList {get;set;}
     public String accountId {get;set;}
+    public Account accountWithAllDetails {get;set;}
 
     public AccountDetailsViewController() {
 
@@ -15,10 +15,13 @@ public with sharing class AccountDetailsViewController {
             accountSelectOptionList.add(new SelectOption(item.Id, item.Name));
         }
    
-        getContacts();
+        getAllDetails();
     }
 
-    public void getContacts(){
-        contactList = [SELECT Id, Name, AccountId FROM Contact WHERE AccountId =: accountId];  
+    public void getAllDetails(){
+        accountWithAllDetails = [SELECT Id, Name, AccountNumber, Type, Phone, Industry,
+        AnnualRevenue, Rating, Fax, NumberOfEmployees, SLAExpirationDate__c,
+        (SELECT Id, Name, Title, Phone, AccountId FROM Contacts) 
+        FROM Account WHERE Id =: accountId];   
     }
 }
