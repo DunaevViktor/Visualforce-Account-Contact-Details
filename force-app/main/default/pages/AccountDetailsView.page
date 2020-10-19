@@ -26,12 +26,20 @@
                 <apex:outputField value="{!accountWithAllDetails.Fax}"/>
 
                 <apex:pageBlockSection columns="1" title="Related contacts">
-                    <apex:pageBlockTable value="{!accountWithAllDetails.contacts}" var="contact">
+                    <apex:pageBlockTable value="{!contactList}" var="contact">
                         <apex:column value="{!contact.Name}"/>
                         <apex:column value="{!contact.Title}"/>
                         <apex:column value="{!contact.Phone}"/>
                     </apex:pageBlockTable>
                 </apex:pageBlockSection>
+
+                <br/>
+
+                <apex:outputPanel>
+                    <apex:commandLink action="{!previousContactsPage}" value="Previous page" rendered="{!hasPrevious}"/>
+                    &nbsp;&nbsp;&nbsp;
+                    <apex:commandLink action="{!nextContactsPage}" value="Next page" rendered="{!hasNext}"/>
+                </apex:outputPanel>
 
             </apex:pageBlockSection>
 

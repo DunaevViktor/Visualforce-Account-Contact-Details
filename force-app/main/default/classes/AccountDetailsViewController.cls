@@ -1,6 +1,7 @@
 public with sharing class AccountDetailsViewController {
 
     public List<Account> accountList {get;set;}
+    public List<Contact> contactList {get;set;}
     public List<SelectOption> accountSelectOptionList {get;set;}
     public String accountId {get;set;}
     public Account accountWithAllDetails {get;set;}
@@ -8,6 +9,20 @@ public with sharing class AccountDetailsViewController {
     public Account newAccount {get;set;}
     public Boolean isAccountForm {get;set;}
     public Boolean isContactForm {get;set;}
+
+    public static Integer PAGE_NUMBER = 10;
+    public ApexPages.StandardSetController contactsController {get;set;}
+    public Integer pageNumber {get;set;}
+
+    public Boolean hasPrevious {
+        get {return contactsController.getHasPrevious();}
+        set;
+    }
+
+    public Boolean hasNext {
+        get {return contactsController.getHasNext();}
+        set;
+    }
 
     public AccountDetailsViewController() {
 
@@ -32,7 +47,34 @@ public with sharing class AccountDetailsViewController {
         accountWithAllDetails = [SELECT Id, Name, AccountNumber, Type, Phone, Industry,
         AnnualRevenue, Rating, Fax, NumberOfEmployees, SLAExpirationDate__c,
         (SELECT Id, Name, Title, Phone, AccountId FROM Contacts) 
-        FROM Account WHERE Id =: accountId];   
+        FROM Account WHERE Id =: accountId];
+
+        contactsController = new ApexPages.StandardSetController(Database.getQueryLocator(
+            [SELECT Id, Name, Title, Phone, AccountId FROM Contact WHERE AccountId =: accountWithAllDetails.Id]));
+        contactsController.setPageSize(10);
+
+        pageNumber = 1;
+
+        getContactsPage();
+    }
+
+    public void getContactsPage() {
+        contactsController.setPageNumber(pageNumber);
+        contactList = contactsController.getRecords();
+    }
+
+    public void previousContactsPage() {
+        if(contactsController.getHasPrevious()) {
+            pageNumber--;
+            getContactsPage();
+        }
+    }
+
+    public void nextContactsPage() {
+        if(contactsController.getHasNext()) {
+            pageNumber++;
+            getContactsPage();
+        }
     }
 
     public void openAccountForm() {
