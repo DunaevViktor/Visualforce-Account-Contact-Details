@@ -7,23 +7,26 @@
             
             <apex:actionFunction action="{!getAllDetails}" name="selectAccount" reRender="AccountInfoSection"/>
 
-            Select Account:
-            <apex:selectList size="1" value="{!accountId}" onchange="selectAccount()">
-                <apex:selectOptions value="{!accountSelectOptionList}"/>
-            </apex:selectList>
+            <apex:pageBlockSection showHeader="false" columns="1">
+                <apex:selectList label="Select Account" size="1" value="{!accountId}" onchange="selectAccount()" style="width 300px; height: 25px">
+                    <apex:selectOptions value="{!accountSelectOptionList}" />
+                </apex:selectList>
+            </apex:pageBlockSection>
             
-            <apex:pageBlockSection title="Account details" id="AccountInfoSection">
+            <apex:pageBlockSection title="Account details" id="AccountInfoSection" columns="1">
 
-                <apex:outputField value="{!accountWithAllDetails.Name}"/>
-                <apex:outputField value="{!accountWithAllDetails.AccountNumber}"/>
-                <apex:outputField value="{!accountWithAllDetails.Type}"/>
-                <apex:outputField value="{!accountWithAllDetails.AnnualRevenue }"/>
-                <apex:outputField value="{!accountWithAllDetails.SLAExpirationDate__c}"/>
-                <apex:outputField value="{!accountWithAllDetails.Industry}"/>
-                <apex:outputField value="{!accountWithAllDetails.Rating}"/>
-                <apex:outputField value="{!accountWithAllDetails.NumberOfEmployees}"/>
-                <apex:outputField value="{!accountWithAllDetails.Phone}"/>
-                <apex:outputField value="{!accountWithAllDetails.Fax}"/>
+                <apex:pageBlockSection columns="2" showHeader="false">
+                    <apex:outputField value="{!accountWithAllDetails.Name}"/>
+                    <apex:outputField value="{!accountWithAllDetails.AccountNumber}"/>
+                    <apex:outputField value="{!accountWithAllDetails.Type}"/>
+                    <apex:outputField value="{!accountWithAllDetails.AnnualRevenue}"/>
+                    <apex:outputField value="{!accountWithAllDetails.SLAExpirationDate__c}"/>
+                    <apex:outputField value="{!accountWithAllDetails.Industry}"/>
+                    <apex:outputField value="{!accountWithAllDetails.Rating}"/>
+                    <apex:outputField value="{!accountWithAllDetails.NumberOfEmployees}"/>
+                    <apex:outputField value="{!accountWithAllDetails.Phone}"/>
+                    <apex:outputField value="{!accountWithAllDetails.Fax}"/>
+                </apex:pageBlockSection>
 
                 <apex:pageBlockSection columns="1" title="Related contacts">
                     <apex:pageBlockTable value="{!contactList}" var="contact">
@@ -32,8 +35,6 @@
                         <apex:column value="{!contact.Phone}"/>
                     </apex:pageBlockTable>
                 </apex:pageBlockSection>
-
-                <br/>
 
                 <apex:outputPanel>
                     <apex:commandLink action="{!previousContactsPage}" value="Previous page" rendered="{!hasPrevious}"/>
@@ -48,19 +49,30 @@
                 <apex:commandButton action="{!openContactForm}" title="New Contact" value="New Contact" rendered="true"/>
             </apex:pageBlockButtons>
 
-            <apex:pageBlockSection title="Add account" columns="1" rendered="{!isAccountForm}">
+            <apex:pageBlockSection title="Add account" columns="1" rendered="{!isAccountForm}" id="addAccount">
                 <apex:inputField value="{!newAccount.Name}"/>
+                <apex:inputField value="{!newAccount.AccountNumber}"/>
+                <apex:inputField value="{!newAccount.Type}"/>
+                <apex:inputField value="{!newAccount.AnnualRevenue}"/>
+                <apex:inputField value="{!newAccount.SLAExpirationDate__c}"/>
+                <apex:inputField value="{!newAccount.Industry}"/>
+                <apex:inputField value="{!newAccount.Rating}"/>
+                <apex:inputField value="{!newAccount.NumberOfEmployees}"/>
+                <apex:inputField value="{!newAccount.Phone}"/>
+                <apex:inputField value="{!newAccount.Fax}"/>
                 <apex:outputPanel>
-                    <apex:commandButton action="{!closeAccountForm}" immediate="true" value="Cancel" />
+                    <apex:commandButton action="{!closeAccountForm}" immediate="true" value="Cancel" style="margin-right: 5px"/>
                     <apex:commandButton action="{!saveAccount}" value="Save" />
                 </apex:outputPanel>
             </apex:pageBlockSection>
         
-            <apex:pageBlockSection title="Add contact" columns="1" rendered="{!isContactForm}">
+            <apex:pageBlockSection title="Add contact" columns="1" rendered="{!isContactForm}" id="addContact">
                 <apex:inputField value="{!newContact.FirstName}"/>
                 <apex:inputField value="{!newContact.LastName}"/>
+                <apex:inputField value="{!newContact.Title}"/>
+                <apex:inputField value="{!newContact.Phone}"/>
                 <apex:outputPanel>
-                    <apex:commandButton action="{!closeContactForm}" immediate="true" value="Cancel" />
+                    <apex:commandButton action="{!closeContactForm}" immediate="true" value="Cancel" style="margin-right: 5px"/>
                     <apex:commandButton action="{!saveContact}" value="Save" />
                 </apex:outputPanel>
             </apex:pageBlockSection>
