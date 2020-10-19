@@ -1,33 +1,11 @@
-<apex:page showHeader="false" sidebar="false" controller="AccountDetailsViewController">
+<apex:page controller="AccountDetailsViewController" tabStyle="Account_Details__tab">
 
     <apex:slds />
 
     <apex:form >
-        <apex:pageBlock >
+        <apex:pageBlock>
             
             <apex:actionFunction action="{!getAllDetails}" name="selectAccount" reRender="AccountInfoSection"/>
-
-            <apex:pageBlockButtons>
-                <apex:commandButton action="{!openAccountForm}" title="New Account" value="New Account" rendered="true"/>
-                <apex:commandButton action="{!openContactForm}" title="New Contact" value="New Contact" rendered="true"/>
-            </apex:pageBlockButtons>
-
-            <apex:pageBlockSection title="Add account" columns="1" rendered="{!isAccountForm}">
-                <apex:inputField value="{!newAccount.Name}"/>
-                <apex:outputPanel>
-                    <apex:commandButton action="{!closeAccountForm}" immediate="true" value="Cancel" />
-                    <apex:commandButton action="{!saveAccount}" value="Save" />
-                </apex:outputPanel>
-            </apex:pageBlockSection>
-        
-            <apex:pageBlockSection title="Add contact" columns="1" rendered="{!isContactForm}">
-                <apex:inputField value="{!newContact.FirstName}"/>
-                <apex:inputField value="{!newContact.LastName}"/>
-                <apex:outputPanel>
-                    <apex:commandButton action="{!closeContactForm}" immediate="true" value="Cancel" />
-                    <apex:commandButton action="{!saveContact}" value="Save" />
-                </apex:outputPanel>
-            </apex:pageBlockSection>
 
             Select Account:
             <apex:selectList size="1" value="{!accountId}" onchange="selectAccount()">
@@ -55,7 +33,29 @@
                     </apex:pageBlockTable>
                 </apex:pageBlockSection>
 
-            </apex:pageBlockSection> 
+            </apex:pageBlockSection>
+
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton action="{!openAccountForm}" title="New Account" value="New Account" rendered="true"/>
+                <apex:commandButton action="{!openContactForm}" title="New Contact" value="New Contact" rendered="true"/>
+            </apex:pageBlockButtons>
+
+            <apex:pageBlockSection title="Add account" columns="1" rendered="{!isAccountForm}">
+                <apex:inputField value="{!newAccount.Name}"/>
+                <apex:outputPanel>
+                    <apex:commandButton action="{!closeAccountForm}" immediate="true" value="Cancel" />
+                    <apex:commandButton action="{!saveAccount}" value="Save" />
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+        
+            <apex:pageBlockSection title="Add contact" columns="1" rendered="{!isContactForm}">
+                <apex:inputField value="{!newContact.FirstName}"/>
+                <apex:inputField value="{!newContact.LastName}"/>
+                <apex:outputPanel>
+                    <apex:commandButton action="{!closeContactForm}" immediate="true" value="Cancel" />
+                    <apex:commandButton action="{!saveContact}" value="Save" />
+                </apex:outputPanel>
+            </apex:pageBlockSection>
             
         </apex:pageBlock>
     </apex:form> 
