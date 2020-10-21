@@ -10,7 +10,8 @@ public with sharing class AccountDetailsViewController {
     public Boolean isAccountForm {get;set;}
     public Boolean isContactForm {get;set;}
 
-    public static Integer PAGE_NUMBER = 10;
+    //Number of contacts per page
+    public static Integer PAGE_NUMBER = 5;
     public ApexPages.StandardSetController contactsController {get;set;}
     public Integer pageNumber {get;set;}
 
@@ -43,21 +44,22 @@ public with sharing class AccountDetailsViewController {
         getAllDetails();
     }
 
+    //Gets details for a given account
     public void getAllDetails(){
         accountWithAllDetails = [SELECT Id, Name, AccountNumber, Type, Phone, Industry,
-        AnnualRevenue, Rating, Fax, NumberOfEmployees, SLAExpirationDate__c,
-        (SELECT Id, Name, Title, Phone, AccountId FROM Contacts) 
+        AnnualRevenue, Rating, Fax, NumberOfEmployees, SLAExpirationDate__c
         FROM Account WHERE Id =: accountId];
 
         contactsController = new ApexPages.StandardSetController(Database.getQueryLocator(
             [SELECT Id, Name, Title, Phone, AccountId FROM Contact WHERE AccountId =: accountWithAllDetails.Id]));
-        contactsController.setPageSize(10);
+        contactsController.setPageSize(PAGE_NUMBER);
 
         pageNumber = 1;
 
         getContactsPage();
     }
 
+    //Gets the contact list for a given page
     public void getContactsPage() {
         contactsController.setPageNumber(pageNumber);
         contactList = contactsController.getRecords();
@@ -95,6 +97,7 @@ public with sharing class AccountDetailsViewController {
         isContactForm = false;
     }
 
+    //Adds a new account to the database
     public void saveAccount() {
         insert newAccount;
         accountSelectOptionList.add(new SelectOption(newAccount.Id, newAccount.Name));
@@ -102,6 +105,7 @@ public with sharing class AccountDetailsViewController {
         newAccount = new Account();
     }
 
+    //Adds a new contact to the database
     public void saveContact() {
         newContact.AccountId = accountWithAllDetails.Id;
         insert newContact;

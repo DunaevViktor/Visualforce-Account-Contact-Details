@@ -2,11 +2,12 @@
 
     <apex:slds />
 
-    <apex:form >
+    <apex:form>
         <apex:pageBlock>
             
             <apex:actionFunction action="{!getAllDetails}" name="selectAccount" reRender="AccountInfoSection"/>
 
+            <!--Select Account Picklist-->
             <apex:pageBlockSection showHeader="false" columns="1">
                 <apex:selectList label="Select Account" size="1" value="{!accountId}" onchange="selectAccount()" style="width 300px; height: 25px">
                     <apex:selectOptions value="{!accountSelectOptionList}" />
@@ -15,6 +16,7 @@
             
             <apex:pageBlockSection title="Account details" id="AccountInfoSection" columns="1">
 
+                <!--Account details block-->
                 <apex:pageBlockSection columns="2" showHeader="false">
                     <apex:outputField value="{!accountWithAllDetails.Name}"/>
                     <apex:outputField value="{!accountWithAllDetails.AccountNumber}"/>
@@ -28,6 +30,7 @@
                     <apex:outputField value="{!accountWithAllDetails.Fax}"/>
                 </apex:pageBlockSection>
 
+                <!--Contacts details block-->
                 <apex:pageBlockSection columns="1" title="Related contacts">
                     <apex:pageBlockTable value="{!contactList}" var="contact">
                         <apex:column value="{!contact.Name}"/>
@@ -36,6 +39,8 @@
                     </apex:pageBlockTable>
                 </apex:pageBlockSection>
 
+                <!--Pagination block
+                Displayed, if the account has more than 5 contacts-->
                 <apex:outputPanel>
                     <apex:commandLink action="{!previousContactsPage}" value="Previous page" rendered="{!hasPrevious}"/>
                     &nbsp;&nbsp;&nbsp;
@@ -44,11 +49,13 @@
 
             </apex:pageBlockSection>
 
+            <!--Action buttons block-->
             <apex:pageBlockButtons location="bottom">
                 <apex:commandButton action="{!openAccountForm}" title="New Account" value="New Account" rendered="true"/>
                 <apex:commandButton action="{!openContactForm}" title="New Contact" value="New Contact" rendered="true"/>
             </apex:pageBlockButtons>
 
+            <!--Account adding logic-->
             <apex:pageBlockSection title="Add account" columns="1" rendered="{!isAccountForm}" id="addAccount">
                 <apex:inputField value="{!newAccount.Name}"/>
                 <apex:inputField value="{!newAccount.AccountNumber}"/>
@@ -66,6 +73,7 @@
                 </apex:outputPanel>
             </apex:pageBlockSection>
         
+            <!--Contact adding logic-->
             <apex:pageBlockSection title="Add contact" columns="1" rendered="{!isContactForm}" id="addContact">
                 <apex:inputField value="{!newContact.FirstName}"/>
                 <apex:inputField value="{!newContact.LastName}"/>
