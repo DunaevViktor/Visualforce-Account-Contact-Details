@@ -1,17 +1,19 @@
 <apex:page controller="AccountDetailsViewController" tabStyle="Account_Details__tab">
 
-    <apex:slds />
+    <!--<apex:slds />-->
 
     <apex:form>
         <apex:pageBlock>
-            
-            <apex:actionFunction action="{!getAllDetails}" name="selectAccount" reRender="AccountInfoSection"/>
 
             <!--Select Account Picklist-->
             <apex:pageBlockSection showHeader="false" columns="1">
-                <apex:selectList label="Select Account" size="1" value="{!accountId}" onchange="selectAccount()" style="width 300px; height: 25px">
-                    <apex:selectOptions value="{!accountSelectOptionList}" />
-                </apex:selectList>
+                <apex:actionRegion>
+                    <h1>Select account: </h1>
+                    <apex:selectList size="1" value="{!accountId}" style="width 300px; height: 25px">
+                        <apex:actionSupport event="onchange" action="{!getAllDetails}" reRender="AccountInfoSection" />
+                        <apex:selectOptions value="{!accountSelectOptionList}" />
+                    </apex:selectList>
+                </apex:actionRegion>
             </apex:pageBlockSection>
             
             <apex:pageBlockSection title="Account details" id="AccountInfoSection" columns="1">
