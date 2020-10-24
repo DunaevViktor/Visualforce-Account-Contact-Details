@@ -1,29 +1,19 @@
 public with sharing class AccountDetailsViewController {
 
     public List<Account> accountList {get;set;}
-    public List<Contact> contactList {get;set;}
     public List<SelectOption> accountSelectOptionList {get;set;}
+    public List<SelectOption> paginationSizeOptions{get;set;}
     public String accountId {get;set;}
     public Account accountWithAllDetails {get;set;}
+    public Integer numOfRecords {get; set;} 
+    public Integer numOfPages {get;set;}
+    public Integer size{get;set;}  
     public Contact newContact {get;set;}
     public Account newAccount {get;set;}
     public Boolean isAccountForm {get;set;}
     public Boolean isContactForm {get;set;}
 
-    //Number of contacts per page
-    public static Integer PAGE_NUMBER = 5;
     public ApexPages.StandardSetController contactsController {get;set;}
-    public Integer pageNumber {get;set;}
-
-    public Boolean hasPrevious {
-        get {return contactsController.getHasPrevious();}
-        set;
-    }
-
-    public Boolean hasNext {
-        get {return contactsController.getHasNext();}
-        set;
-    }
 
     public AccountDetailsViewController() {
 
@@ -40,6 +30,12 @@ public with sharing class AccountDetailsViewController {
 
         newContact = new Contact();
         newAccount = new Account();
+
+        size = 5;
+        paginationSizeOptions = new List<SelectOption>();
+        paginationSizeOptions.add(new SelectOption('5','5'));
+        paginationSizeOptions.add(new SelectOption('10','10'));
+        paginationSizeOptions.add(new SelectOption('20','20'));
    
         getAllDetails();
     }
@@ -52,31 +48,14 @@ public with sharing class AccountDetailsViewController {
 
         contactsController = new ApexPages.StandardSetController(Database.getQueryLocator(
             [SELECT Id, Name, Title, Phone, AccountId FROM Contact WHERE AccountId =: accountWithAllDetails.Id]));
-        contactsController.setPageSize(PAGE_NUMBER);
+        contactsController.setPageSize(size);
 
-        pageNumber = 1;
-
-        getContactsPage();
+        numOfRecords = contactsController.getResultSize();
+        numOfPages = setNumOfPages(size, numOfRecords);
     }
 
-    //Gets the contact list for a given page
-    public void getContactsPage() {
-        contactsController.setPageNumber(pageNumber);
-        contactList = contactsController.getRecords();
-    }
-
-    public void previousContactsPage() {
-        if(contactsController.getHasPrevious()) {
-            pageNumber--;
-            getContactsPage();
-        }
-    }
-
-    public void nextContactsPage() {
-        if(contactsController.getHasNext()) {
-            pageNumber++;
-            getContactsPage();
-        }
+    public List<Contact> getContacts(){
+        return contactsController.getRecords();
     }
 
     public void openAccountForm() {
@@ -95,6 +74,24 @@ public with sharing class AccountDetailsViewController {
 
     public void closeContactForm() {
         isContactForm = false;
+    }
+
+    //Updates the number of pages
+    public void refreshPageSize() {
+        contactsController.setPageSize(size);
+        numOfRecords = contactsController.getResultSize();
+        numOfPages = setNumOfPages(size, numOfRecords);
+    }
+
+    //Calculates the number of pages
+    public Integer setNumOfPages(Integer size, Integer numOfRecords){
+        Integer remainder = Math.mod(numOfRecords, size);
+        if(remainder == 0){
+            return numOfRecords/size;
+        }
+        else{
+            return numOfRecords/size + 1;
+        }
     }
 
     //Adds a new account to the database

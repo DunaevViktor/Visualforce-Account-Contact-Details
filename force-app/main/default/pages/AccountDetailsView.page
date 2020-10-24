@@ -34,28 +34,41 @@
 
                 <!--Contacts details block-->
                 <apex:pageBlockSection columns="1" title="Related contacts">
-                    <apex:pageBlockTable value="{!contactList}" var="contact">
+                    <apex:pageBlockTable value="{!contacts}" var="contact">
                         <apex:column value="{!contact.Name}"/>
                         <apex:column value="{!contact.Title}"/>
                         <apex:column value="{!contact.Phone}"/>
                     </apex:pageBlockTable>
                 </apex:pageBlockSection>
 
-                <!--Pagination block
-                Displayed, if the account has more than 5 contacts-->
-                <apex:outputPanel>
-                    <apex:commandLink action="{!previousContactsPage}" value="Previous page" rendered="{!hasPrevious}"/>
-                    &nbsp;&nbsp;&nbsp;
-                    <apex:commandLink action="{!nextContactsPage}" value="Next page" rendered="{!hasNext}"/>
-                </apex:outputPanel>
+                <!--Pagination block-->
+                <apex:actionRegion>
+                    <apex:selectList value="{!size}" multiselect="false" size="1">
+                        <apex:actionSupport event="onchange" action="{!refreshPageSize}" reRender="AccountInfoSection"/>
+                        <apex:selectOptions value="{!paginationSizeOptions}"/>
+                    </apex:selectList>
 
+                    <div align="Center">
+                        <apex:commandButton title="First" value="First" action="{!contactsController.first}"
+                        reRender="AccountInfoSection" disabled="{!!contactsController.hasPrevious}"/>
+                        <apex:commandButton title="Previous" value="Previous" action="{!contactsController.previous}"
+                        reRender="AccountInfoSection" disabled="{!!contactsController.hasPrevious}"/>
+                        {!contactsController.PageNumber} of {!numOfPages} 
+                        <apex:commandButton title="Next" value="Next" action="{!contactsController.next}"
+                        reRender="AccountInfoSection" disabled="{!!contactsController.hasNext}"
+                        style="margin-left:5px;"/>
+                        <apex:commandButton title="Last" value="Last" action="{!contactsController.last}"
+                        reRender="AccountInfoSection" disabled="{!!contactsController.hasNext}"/>
+                    </div>
+                </apex:actionRegion>
+                
             </apex:pageBlockSection>
 
             <!--Action buttons block-->
-            <apex:pageBlockButtons location="bottom">
-                <apex:commandButton action="{!openAccountForm}" title="New Account" value="New Account" rendered="true"/>
-                <apex:commandButton action="{!openContactForm}" title="New Contact" value="New Contact" rendered="true"/>
-            </apex:pageBlockButtons>
+            <div align="Center">
+                <apex:commandButton action="{!openAccountForm}" title="New Account" value="New Account" rendered="true" immediate="true"/>
+                <apex:commandButton action="{!openContactForm}" title="New Contact" value="New Contact" rendered="true" immediate="true"/>
+            </div>
 
             <!--Account adding logic-->
             <apex:pageBlockSection title="Add account" columns="1" rendered="{!isAccountForm}" id="addAccount">
